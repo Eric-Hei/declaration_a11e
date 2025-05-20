@@ -1,0 +1,22 @@
+{
+    "amp.commands.allowlist": [
+        "npm install",
+        "yarn install",
+        "curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh",
+        "bash",
+        "export NVM_DIR=\"$HOME/.nvm\"",
+        "[ -s \"$NVM_DIR/nvm.sh\" ]",
+        "\\. \"$NVM_DIR/nvm.sh\"",
+        "nvm install 18",
+        "$HOME/.nvm/versions/node/v18.20.8/bin/npm install",
+        "source $HOME/.nvm/nvm.sh",
+        "npm start",
+        "cp -r node_modules/@codegouvfr/react-dsfr/dsfr public/",
+        "curl -o public/favicon.ico https://raw.githubusercontent.com/codegouvfr/react-dsfr/main/public/favicon.ico",
+        "curl -o public/logo192.png https://raw.githubusercontent.com/codegouvfr/react-dsfr/main/public/logo192.png",
+        "curl -o public/logo512.png https://raw.githubusercontent.com/codegouvfr/react-dsfr/main/public/logo512.png",
+        "PORT=3001 npm start",
+        "kill -9 21145 21144",
+        "mv src/components/FormSections/GeneralInfoSection.js.new src/components/FormSections/GeneralInfoSection.js"
+    ]
+}
