@@ -1,6 +1,16 @@
 import React, { useState } from 'react';
-import { fr } from '@codegouvfr/react-dsfr';
-import { Select } from '@codegouvfr/react-dsfr/Select';
+// Composant Select simplifié
+const Select = ({ label, hint, nativeSelectProps, options }) => (
+  <div className="fr-select-group">
+    {label && <label className="fr-label" htmlFor={nativeSelectProps?.id}>{label}</label>}
+    {hint && <span className="fr-hint-text">{hint}</span>}
+    <select className="fr-select" {...nativeSelectProps}>
+      {options.map(option => (
+        <option key={option.value} value={option.value}>{option.label}</option>
+      ))}
+    </select>
+  </div>
+);
 
 const TestSelectComponent = () => {
   const [selectedValue, setSelectedValue] = useState('');
@@ -18,10 +28,10 @@ const TestSelectComponent = () => {
   };
 
   return (
-    <div className={fr.cx('fr-container')}>
+    <div className="fr-container">
       <h2>Test du composant Select</h2>
-      <div className={fr.cx('fr-grid-row', 'fr-grid-row--gutters')}>
-        <div className={fr.cx('fr-col-12', 'fr-col-md-6')}>
+      <div className="fr-grid-row fr-grid-row--gutters">
+        <div className="fr-col-12 fr-col-md-6">
           <Select
             label="Type d'organisme"
             nativeSelectProps={{
@@ -31,10 +41,10 @@ const TestSelectComponent = () => {
               required: true
             }}
             options={typeOptions}
-            className={fr.cx('fr-mb-3w')}
+            className="fr-mb-3w"
           />
         </div>
-        <div className={fr.cx('fr-col-12')}>
+        <div className="fr-col-12">
           <p>Valeur sélectionnée: {selectedValue || 'Aucune'}</p>
         </div>
       </div>

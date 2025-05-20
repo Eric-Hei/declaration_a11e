@@ -1,0 +1,56 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:../database.sqlite"
+}
+
+model Declaration {
+  id                        String   @id @default(uuid())
+  organisme                 String
+  typeOrganisme             String
+  siret                     String?
+  url                       String
+  intituleSite              String?
+  
+  // Conformité
+  niveauConformite          String
+  dateAudit                 String?
+  resultatAudit             String?
+  derogationCharge          Boolean? @default(false)
+  derogationExempt          Boolean? @default(false)
+  detailDerogation          String?
+  
+  // Plan d'action
+  mesuresCorrectivesPrevues String?
+  datePrevueMiseEnConformite String?
+  budgetAlloue              String?
+  etudeAccessibiliteRealisee Boolean? @default(false)
+  ressourcesHumainesDediees Boolean? @default(false)
+  prestatairesSpecialises   Boolean? @default(false)
+  
+  // Contact
+  contactName               String?
+  contactFonction           String?
+  contactEmail              String?
+  contactPhone              String?
+  adresseSiege              String?
+  contactFormulaire         Boolean? @default(false)
+  contactEmailDedie         Boolean? @default(false)
+  contactTelephone          Boolean? @default(false)
+  contactCourrier           Boolean? @default(false)
+  certificationInfos        Boolean? @default(false)
+  
+  // Métadonnées
+  dateCreation              DateTime @default(now())
+  dateModification          DateTime @updatedAt
+  htmlContent               String?
+  status                    String   @default("draft")
+  
+  @@map("declarations")
+}

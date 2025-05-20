@@ -1,8 +1,32 @@
 import React from 'react';
-import { fr } from '@codegouvfr/react-dsfr';
-import { Input } from '@codegouvfr/react-dsfr/Input';
-import { Alert } from '@codegouvfr/react-dsfr/Alert';
-import { Checkbox } from '@codegouvfr/react-dsfr/Checkbox';
+// Composants DSFR simplifiés
+const Input = ({ label, hintText, textArea, nativeInputProps, nativeTextAreaProps, className }) => (
+  <div className={`fr-input-group ${className || ''}`}>
+    {label && <label className="fr-label">{label}</label>}
+    {hintText && <span className="fr-hint-text">{hintText}</span>}
+    {textArea ? 
+      <textarea className="fr-textarea" {...nativeTextAreaProps} /> : 
+      <input className="fr-input" {...nativeInputProps} />
+    }
+  </div>
+);
+
+const Alert = ({ severity = 'info', small, description }) => (
+  <div className={`fr-alert fr-alert--${severity} ${small ? 'fr-alert--sm' : ''}`}>
+    <p>{description}</p>
+  </div>
+);
+
+const Checkbox = ({ options, className }) => (
+  <div className={`fr-form-group ${className || ''}`}>
+    {options.map((option, index) => (
+      <div className="fr-checkbox-group" key={index}>
+        <input type="checkbox" id={`checkbox-${index}`} {...option.nativeInputProps} />
+        <label className="fr-label" htmlFor={`checkbox-${index}`}>{option.label}</label>
+      </div>
+    ))}
+  </div>
+);
 
 const ActionPlanSection = ({ formData, handleChange }) => {
   // N'affiche cette section que pour les déclarations partiellement ou non conformes
@@ -11,10 +35,10 @@ const ActionPlanSection = ({ formData, handleChange }) => {
   }
 
   return (
-    <div className={fr.cx('fr-container')}>
-      <h2>Plan d'action</h2>
+    <div className="fr-container">
+      <h2>Plan d'actions</h2>
       
-      <div className={fr.cx('fr-mb-3w')}>
+      <div className="fr-mb-3w">
         <Alert
           severity="info"
           small
@@ -22,19 +46,25 @@ const ActionPlanSection = ({ formData, handleChange }) => {
         />
       </div>
 
-      <Input
-        label="Mesures correctives prévues"
-        hintText="Décrivez les actions qui seront mises en œuvre pour corriger les non-conformités"
-        textArea
-        nativeTextAreaProps={{
-          name: "mesuresCorrectivesPrevues",
-          value: formData.mesuresCorrectivesPrevues || '',
-          onChange: handleChange,
-          rows: 5,
-          required: true
-        }}
-        className={fr.cx('fr-mb-3w')}
-      />
+      <div className="fr-mb-3w">
+        <div className="fr-input-group">
+          <label className="fr-label" htmlFor="mesuresCorrectivesPrevues">
+            Mesures correctives prévues
+            <span className="fr-hint-text fr-text--bold"> *</span>
+          </label>
+          <span className="fr-hint-text">Décrivez les actions qui seront mises en œuvre pour corriger les non-conformités</span>
+          <textarea 
+            className="fr-textarea" 
+            id="mesuresCorrectivesPrevues"
+            name="mesuresCorrectivesPrevues"
+            value={formData.mesuresCorrectivesPrevues || ''}
+            onChange={handleChange}
+            rows="8"
+            style={{ minHeight: '150px', width: '100%', border: '1px solid #3a3a3a' }}
+            required={true}
+          />
+        </div>
+      </div>
       
       <Input
         label="Date prévue de mise en conformité"
@@ -46,7 +76,7 @@ const ActionPlanSection = ({ formData, handleChange }) => {
           onChange: handleChange,
           required: true
         }}
-        className={fr.cx('fr-mb-3w')}
+        className="fr-mb-3w"
       />
 
       <Input
@@ -59,7 +89,7 @@ const ActionPlanSection = ({ formData, handleChange }) => {
           min: "0",
           onChange: handleChange
         }}
-        className={fr.cx('fr-mb-3w')}
+        className="fr-mb-3w"
       />
 
       <Checkbox
@@ -104,7 +134,7 @@ const ActionPlanSection = ({ formData, handleChange }) => {
             }
           }
         ]}
-        className={fr.cx('fr-mb-5w')}
+        className="fr-mb-5w"
       />
     </div>
   );

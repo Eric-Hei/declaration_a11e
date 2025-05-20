@@ -1,0 +1,106 @@
+/* Styles de base pour l'application */
+
+:root {
+  --blue-france-main-525: #000091;
+  --blue-france-sun-113-625: #6a6af4;
+  --grey-425: #666666;
+  --grey-925: #161616;
+  --grey-50: #f5f5fe;
+  --grey-100: #e5e5f4;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Marianne', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: #f6f6f6;
+  color: var(--grey-925);
+}
+
+/* Styles pour les conteneurs principaux */
+.main-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+/* Styles pour le stepper */
+.fr-stepper {
+  margin-bottom: 2rem;
+}
+
+.fr-stepper__steps {
+  display: flex;
+  justify-content: space-between;
+  margin: 2rem 0;
+  position: relative;
+}
+
+.fr-stepper__steps::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background-color: var(--grey-100);
+  transform: translateY(-50%);
+  z-index: 0;
+}
+
+.fr-stepper__step {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  z-index: 1;
+  width: 25%;
+  text-align: center;
+}
+
+.fr-stepper__step-icon {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background-color: white;
+  border: 2px solid var(--grey-425);
+  margin-bottom: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.fr-stepper__step[data-fr-current-step="true"] .fr-stepper__step-icon {
+  background-color: var(--blue-france-main-525);
+  border-color: var(--blue-france-main-525);
+}
+
+.fr-stepper__step[data-fr-current-step="true"] .fr-stepper__state-indicator {
+  display: block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: white;
+}
+
+.fr-stepper__step-title {
+  font-size: 0.875rem;
+  margin: 0;
+  max-width: 100%;
+  padding: 0 0.5rem;
+  word-wrap: break-word;
+}
+
+.fr-stepper__state-title {
+  font-size: 0.75rem;
+  color: var(--grey-425);
+  margin-bottom: 0.5rem;
+}
+
+.fr-stepper__step[data-fr-current-step="true"] .fr-stepper__step-title,
+.fr-stepper__step[data-fr-current-step="true"] .fr-stepper__state-title {
+  color: var(--blue-france-main-525);
+  font-weight: 700;
+}

@@ -5,14 +5,14 @@
 import axios from 'axios'; // Pour les appels API réels
 
 // API Configuration
-const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || 'https://api.declarations-accessibilite.gouv.fr';
-const API_VERSION = 'v1';
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || 'http://localhost:3001';
+const API_VERSION = '';
 
 const API_ENDPOINTS = {
-  declarations: `${API_BASE_URL}/${API_VERSION}/declarations`,
-  users: `${API_BASE_URL}/${API_VERSION}/users`,
-  auth: `${API_BASE_URL}/${API_VERSION}/auth`,
-  stats: `${API_BASE_URL}/${API_VERSION}/stats`
+  declarations: `${API_BASE_URL}${API_VERSION}/api/declarations`,
+  users: `${API_BASE_URL}${API_VERSION}/api/users`,
+  auth: `${API_BASE_URL}${API_VERSION}/api/auth`,
+  stats: `${API_BASE_URL}${API_VERSION}/api/stats`
 };
 
 // Création de l'instance axios avec configuration par défaut
@@ -56,36 +56,21 @@ api.interceptors.response.use(
  */
 export const DeclarationApi = {
   /**
-   * Récup\u00e8re toutes les déclarations avec pagination et filtres
-   * @param {Object} params - Param\u00e8tres de filtrage et pagination
-   * @returns {Promise<Object>} - Données paginrées
+   * Récupère toutes les déclarations avec pagination et filtres
+   * @param {Object} params - Paramètres de filtrage et pagination
+   * @returns {Promise<Object>} - Données paginées
    */
   getAll: async (params = {}) => {
     try {
-      // Simulation: dans un environnement de production, nous utiliserions l'API réelle
-      // const response = await api.get(API_ENDPOINTS.declarations, { params });
-      // return response.data;
+      console.log('Appel API GET /declarations avec paramètres:', params);
+      const response = await api.get(API_ENDPOINTS.declarations, { params });
       
-      // Simulation de la réponse pour la démonstration
-      console.log('Appel API GET /declarations avec param\u00e8tres:', params);
-      
-      // Réponse simulée
-      await new Promise(resolve => setTimeout(resolve, 800));
-      
-      const mockData = Array(20).fill(null).map((_, index) => ({
-        id: `decl-${index + 1}`,
-        organisme: `Organisme ${index + 1}`,
-        url: `https://example${index + 1}.gouv.fr`,
-        intituleSite: `Site ${index + 1}`,
-        niveauConformite: ['conforme', 'partiel', 'non_conforme'][Math.floor(Math.random() * 3)],
-        dateCreation: new Date(Date.now() - Math.random() * 10000000000).toISOString()
-      }));
-      
+      // Formater la réponse pour correspondre à l'interface attendue
       return {
-        data: mockData.slice(0, params.limit || 10),
+        data: response.data,
         pagination: {
-          totalItems: mockData.length,
-          totalPages: Math.ceil(mockData.length / (params.limit || 10)),
+          totalItems: response.data.length,
+          totalPages: Math.ceil(response.data.length / (params.limit || 10)),
           currentPage: params.page || 1,
           limit: params.limit || 10
         }
@@ -97,37 +82,15 @@ export const DeclarationApi = {
   },
   
   /**
-   * Récup\u00e8re une déclaration par son ID
+   * Récupère une déclaration par son ID
    * @param {String} id - Identifiant de la déclaration
    * @returns {Promise<Object>} - Données de la déclaration
    */
   getById: async (id) => {
     try {
-      // Version API réelle
-      // const response = await api.get(`${API_ENDPOINTS.declarations}/${id}`);
-      // return response.data;
-      
-      // Simulation
       console.log(`Appel API GET /declarations/${id}`);
-      await new Promise(resolve => setTimeout(resolve, 400));
-      
-      return {
-        id,
-        organisme: 'DINUM',
-        url: 'https://numerique.gouv.fr',
-        intituleSite: 'Site de la DINUM',
-        niveauConformite: 'partiel',
-        dateAudit: '2023-02-15',
-        resultatAudit: 'Audit réalisé par une entité externe. 12 non-conformités détectées.',
-        planAction: 'Plan de mise en conformité sur 6 mois',
-        contact: {
-          nom: 'Jean Dupont',
-          email: 'jean.dupont@example.gouv.fr'
-        },
-        htmlContent: '<html><body><h1>Déclaration d\'accessibilité</h1><p>Contenu de la déclaration</p></body></html>',
-        dateCreation: '2023-04-10T14:30:00Z',
-        status: 'published'
-      };
+      const response = await api.get(`${API_ENDPOINTS.declarations}/${id}`);
+      return response.data;
     } catch (error) {
       console.error(`Erreur API getById declaration ${id}:`, error);
       throw error;
@@ -136,25 +99,14 @@ export const DeclarationApi = {
   
   /**
    * Crée une nouvelle déclaration
-   * @param {Object} data - Données de la déclaration \u00e0 créer
+   * @param {Object} data - Données de la déclaration à créer
    * @returns {Promise<Object>} - Déclaration créée
    */
   create: async (data) => {
     try {
-      // Version API réelle
-      // const response = await api.post(API_ENDPOINTS.declarations, data);
-      // return response.data;
-      
-      // Simulation
       console.log('Appel API POST /declarations avec données:', data);
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      return {
-        id: `decl-${Date.now()}`,
-        ...data,
-        dateCreation: new Date().toISOString(),
-        status: 'draft'
-      };
+      const response = await api.post(API_ENDPOINTS.declarations, data);
+      return response.data;
     } catch (error) {
       console.error('Erreur API create declaration:', error);
       throw error;
@@ -162,26 +114,16 @@ export const DeclarationApi = {
   },
   
   /**
-   * Met \u00e0 jour une déclaration existante
+   * Met à jour une déclaration existante
    * @param {String} id - Identifiant de la déclaration
-   * @param {Object} data - Données \u00e0 mettre \u00e0 jour
-   * @returns {Promise<Object>} - Déclaration mise \u00e0 jour
+   * @param {Object} data - Données à mettre à jour
+   * @returns {Promise<Object>} - Déclaration mise à jour
    */
   update: async (id, data) => {
     try {
-      // Version API réelle
-      // const response = await api.put(`${API_ENDPOINTS.declarations}/${id}`, data);
-      // return response.data;
-      
-      // Simulation
       console.log(`Appel API PUT /declarations/${id} avec données:`, data);
-      await new Promise(resolve => setTimeout(resolve, 600));
-      
-      return {
-        id,
-        ...data,
-        dateModification: new Date().toISOString()
-      };
+      const response = await api.put(`${API_ENDPOINTS.declarations}/${id}`, data);
+      return response.data;
     } catch (error) {
       console.error(`Erreur API update declaration ${id}:`, error);
       throw error;
@@ -193,17 +135,11 @@ export const DeclarationApi = {
    * @param {String} id - Identifiant de la déclaration
    * @returns {Promise<Object>} - Confirmation de suppression
    */
-  delete: async (id) => {
+  remove: async (id) => {
     try {
-      // Version API réelle
-      // const response = await api.delete(`${API_ENDPOINTS.declarations}/${id}`);
-      // return response.data;
-      
-      // Simulation
       console.log(`Appel API DELETE /declarations/${id}`);
-      await new Promise(resolve => setTimeout(resolve, 500));
-      
-      return { success: true, message: 'Déclaration supprimée avec succ\u00e8s.' };
+      const response = await api.delete(`${API_ENDPOINTS.declarations}/${id}`);
+      return response.data;
     } catch (error) {
       console.error(`Erreur API delete declaration ${id}:`, error);
       throw error;
@@ -211,26 +147,17 @@ export const DeclarationApi = {
   },
   
   /**
-   * Publie une déclaration (change son statut \u00e0 'published')
+   * Publie une déclaration (change son statut à 'published')
    * @param {String} id - Identifiant de la déclaration
    * @returns {Promise<Object>} - Déclaration publiée
    */
   publish: async (id) => {
     try {
-      // Version API réelle
-      // const response = await api.patch(`${API_ENDPOINTS.declarations}/${id}/publish`);
-      // return response.data;
-      
-      // Simulation
-      console.log(`Appel API PATCH /declarations/${id}/publish`);
-      await new Promise(resolve => setTimeout(resolve, 400));
-      
-      return {
-        id,
-        status: 'published',
-        datePublication: new Date().toISOString(),
-        message: 'Déclaration publiée avec succ\u00e8s.'
-      };
+      console.log(`Appel API PUT /declarations/${id}/publish`);
+      const response = await api.put(`${API_ENDPOINTS.declarations}/${id}`, {
+        status: 'published'
+      });
+      return response.data;
     } catch (error) {
       console.error(`Erreur API publish declaration ${id}:`, error);
       throw error;
@@ -244,27 +171,12 @@ export const DeclarationApi = {
    */
   exportCSV: async (filters = {}) => {
     try {
-      // Version API réelle
-      // const response = await api.get(`${API_ENDPOINTS.declarations}/export/csv`, {
-      //   params: filters,
-      //   responseType: 'blob'
-      // });
-      // return response.data;
-      
-      // Simulation
       console.log('Appel API GET /declarations/export/csv avec filtres:', filters);
-      await new Promise(resolve => setTimeout(resolve, 1200));
-      
-      // Création d'un CSV de démonstration
-      const headers = 'ID,Organisme,URL,Niveau,Date Création\n';
-      const rows = [
-        'decl-1,DINUM,https://numerique.gouv.fr,partiel,2023-03-15\n',
-        'decl-2,Minist\u00e8re de l\'Intérieur,https://interieur.gouv.fr,conforme,2023-02-10\n',
-        'decl-3,P\u00f4le Emploi,https://pole-emploi.fr,non_conforme,2023-01-20\n'
-      ];
-      
-      const csvContent = headers + rows.join('');
-      return new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+      const response = await api.get(`${API_ENDPOINTS.declarations}/export/csv`, {
+        params: filters,
+        responseType: 'blob'
+      });
+      return response.data;
     } catch (error) {
       console.error('Erreur API exportCSV declarations:', error);
       throw error;
@@ -283,29 +195,9 @@ export const AuthApi = {
    */
   login: async (credentials) => {
     try {
-      // Version API réelle
-      // const response = await api.post(`${API_ENDPOINTS.auth}/login`, credentials);
-      // return response.data;
-      
-      // Simulation
       console.log('Appel API POST /auth/login avec identifiants:', credentials);
-      await new Promise(resolve => setTimeout(resolve, 800));
-      
-      // Simulation de connexion réussie pour des identifiants spécifiques
-      if (credentials.email === 'admin@example.gouv.fr' && credentials.password === 'password123') {
-        return {
-          token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkFkbWluIFVzZXIiLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE1MTYyMzkwMjJ9',
-          user: {
-            id: 'usr-1',
-            email: 'admin@example.gouv.fr',
-            name: 'Admin',
-            role: 'admin',
-            organisme: 'DINUM'
-          }
-        };
-      }
-      
-      throw new Error('Identifiants invalides');
+      const response = await api.post(`${API_ENDPOINTS.auth}/login`, credentials);
+      return response.data;
     } catch (error) {
       console.error('Erreur API login:', error);
       throw error;
@@ -318,18 +210,13 @@ export const AuthApi = {
    */
   logout: async () => {
     try {
-      // Version API réelle
-      // const response = await api.post(`${API_ENDPOINTS.auth}/logout`);
-      // return response.data;
-      
-      // Simulation
       console.log('Appel API POST /auth/logout');
-      await new Promise(resolve => setTimeout(resolve, 300));
+      const response = await api.post(`${API_ENDPOINTS.auth}/logout`);
       
       // Suppression du token en local
       localStorage.removeItem('auth_token');
       
-      return { success: true, message: 'Déconnexion réussie.' };
+      return response.data;
     } catch (error) {
       console.error('Erreur API logout:', error);
       throw error;
@@ -342,41 +229,14 @@ export const AuthApi = {
  */
 export const StatsApi = {
   /**
-   * Récup\u00e8re les statistiques globales des déclarations
+   * Récupère les statistiques globales des déclarations
    * @returns {Promise<Object>} - Statistiques des déclarations
    */
   getGlobalStats: async () => {
     try {
-      // Version API réelle
-      // const response = await api.get(`${API_ENDPOINTS.stats}/global`);
-      // return response.data;
-      
-      // Simulation
       console.log('Appel API GET /stats/global');
-      await new Promise(resolve => setTimeout(resolve, 700));
-      
-      return {
-        totalDeclarations: 1245,
-        byConformity: {
-          conforme: 312,
-          partiel: 756,
-          non_conforme: 177
-        },
-        byOrganismeType: {
-          admin_etat: 523,
-          collectivite: 412,
-          etablissement_public: 187,
-          entreprise_publique: 78,
-          autre: 45
-        },
-        monthlyGrowth: [
-          { month: '2023-01', count: 85 },
-          { month: '2023-02', count: 92 },
-          { month: '2023-03', count: 108 },
-          { month: '2023-04', count: 121 },
-          { month: '2023-05', count: 143 }
-        ]
-      };
+      const response = await api.get(`${API_ENDPOINTS.stats}/global`);
+      return response.data;
     } catch (error) {
       console.error('Erreur API getGlobalStats:', error);
       throw error;
